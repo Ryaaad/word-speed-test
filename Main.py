@@ -11,40 +11,50 @@ def main(stdscr):
     stdscr.clear()
     stdscr.refresh()
     text='Are You Quick Enough to Finish this and without Erreur'
-    stdscr.addstr(1,1,text)
     key=''
     userText=''
     index=0
-    color=curses.color_pair(1)
+    stdscr.addstr(1,1,text)
     start_time = time.time()
     while True : 
      key=stdscr.getkey()    
+     if index>=len(text):
+       break
      if key=='KEY_BACKSPACE':
         if index>0 :
          index-=1
         userText=userText[0:-1]
-     if index>=len(text):
-       break
+        stdscr.refresh()
      if key !='KEY_DOWN' and key !='KEY_UP' and key !='KEY_RIGHT' and key !='KEY_LEFT' and key!='KEY_BACKSPACE' and key!='\n' :
-
         userText=userText+key
         index+=1
-        for i in userText :
-          if i==text[index-1]:
-              stdscr.addstr(1,index,key,curses.color_pair(1))
+     stdscr.addstr(1,1,text)
+     for i in range(0,len(userText)) :
+          if userText[i]==text[i]:
+              stdscr.addstr(1,i+1,userText[i],curses.color_pair(1))
           else :
-             if i==' ' :
-              stdscr.addstr(1,index,key,curses.color_pair(3))
+             if userText[i]==' ' :
+              stdscr.addstr(1,i+1,userText[i],curses.color_pair(3))
              else : 
-              stdscr.addstr(1,index,key,curses.color_pair(2))
+              stdscr.addstr(1,i+1,userText[i],curses.color_pair(2))
     end_time = time.time()
     Writngtime=end_time-start_time
     Errs=0
     for i in range(len(text)):
       if userText[i]!=text[i]:
         Errs+=1
-    accurency = (len(text)-Errs)*100 / len(text)
-    stdscr.addstr(5,1,f"Done with {int(accurency)}% with {Errs} Erreurs and time of {int(Writngtime)} second")
+    Accuracy = (len(text)-Errs)*100 / len(text)
+    height , width=stdscr.getmaxyx()
+    stdscr.clear()
+    color=curses.color_pair(1)
+    if Accuracy<50:
+      color=curses.color_pair(2)
+    Results="Results"
+    pos= width/2 - len(Results)/2  
+    stdscr.addstr(1,int(pos),Results)
+    stdscr.addstr(2,1,f"Accuracy: "); stdscr.addstr(2,12,f"{int(Accuracy)}%",color)
+    stdscr.addstr(3,1,f"Number of Errs: "); stdscr.addstr(3,17,f"{Errs}",color)
+    stdscr.addstr(4,1,f"Time : {int(Writngtime)} second")
     key=stdscr.getch()    
 wrapper(main) 
 
