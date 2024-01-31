@@ -28,19 +28,15 @@ def main(stdscr):
      if key !='KEY_DOWN' and key !='KEY_UP' and key !='KEY_RIGHT' and key !='KEY_LEFT' and key!='KEY_BACKSPACE' and key!='\n' :
 
         userText=userText+key
-        if key!=text[index] :
-           if key==' ':
-             color=curses.color_pair(3)
-           else : 
-             color=curses.color_pair(2)
-        else :   
-           if key==' ':
-             color=curses.color_pair(4)
-           else : 
-             color=curses.color_pair(1)
-        
         index+=1
-        stdscr.addstr(1,index,key,color)
+        for i in userText :
+          if i==text[index-1]:
+              stdscr.addstr(1,index,key,curses.color_pair(1))
+          else :
+             if i==' ' :
+              stdscr.addstr(1,index,key,curses.color_pair(3))
+             else : 
+              stdscr.addstr(1,index,key,curses.color_pair(2))
     end_time = time.time()
     Writngtime=end_time-start_time
     Errs=0
@@ -51,3 +47,4 @@ def main(stdscr):
     stdscr.addstr(5,1,f"Done with {int(accurency)}% with {Errs} Erreurs and time of {int(Writngtime)} second")
     key=stdscr.getch()    
 wrapper(main) 
+
